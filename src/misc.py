@@ -2,9 +2,24 @@
 # file for the nflfastR functions I couldn't find a place for
 import pandas as pd
 
+from util.urls import ROSTER_URL
 
+
+# TODO: might need to look into the Sleeper API to get roster data. For now,
+# 		we just use the repo that has the data already stored
 def get_roster(seasons: list) -> pd.DataFrame:
-	pass
+	"""
+	Obtain rosters for all NFL teams across the given seasons
+	:param seasons: list of integers representing seasons where each season[i] in the range [1999, 2020]
+	:return: pandas DataFrame object
+	"""
+	roster_dfs = [
+		pd.read_csv(ROSTER_URL.format(season=season))
+		for season in seasons
+		if 1999 <= int(season) <= 2020
+	]
+	df = pd.concat(roster_dfs)
+	return df
 
 
 def get_schedules(seasons: list) -> pd.DataFrame:
