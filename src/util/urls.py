@@ -3,3 +3,4 @@
 
 ROSTER_URL = 'https://raw.githubusercontent.com/nflverse/nflfastR-roster/master/data/seasons/roster_{season}.csv'
 SCHEDULE_URL = 'https://github.com/nflverse/nflfastR-data/blob/master/schedules/sched_{season}.rds?raw=true'
+STATS_URL = 'https://github.com/nflverse/nflfastR-data/blob/master/data/player_stats.csv.gz?raw=true'
