@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 
 from src.main import test_stub
 from src.misc import get_roster
@@ -23,16 +24,25 @@ EXPECTED_COLUMNS = [
 	'sportradar_id',
 	'yahoo_id',
 	'rotowire_id',
-	'update_dt',
-	'headshot_url'
+	'pff_id',
+	'headshot_url',
+	'fantasy_data_id',
+	'sleeper_id',
+	'years_exp'
 ]
 
 
 class RosterTester(unittest.TestCase):
 	def test_one_year(self):
 		df = get_roster([1999])
-		self.assertEqual(df.columns, EXPECTED_COLUMNS)
-		self.assertEqual(df.shape[0])
+		self.assertTrue(np.all(df.columns == EXPECTED_COLUMNS))
+		self.assertEqual(df.shape[0], 1980)
+		self.assertEqual(df.shape[1], 24)
+
+	def test_multiple_years(self):
+		df = get_roster([1999, 2001])
+		self.assertTrue(np.all(df.columns == EXPECTED_COLUMNS))
+		self.assertEqual(df.shape[1], 24)
 
 
 if __name__ == '__main__':
