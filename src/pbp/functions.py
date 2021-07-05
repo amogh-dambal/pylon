@@ -9,7 +9,7 @@ def build_nflfastr_pbp(game_ids: list, decode: bool = True, rules: bool = True) 
 	pass
 
 
-def load_pbp(seasons: list, serialize: bool = True) -> pd.DataFrame:
+def load_pbp(seasons: list, serialize: bool = True, only_regular_season: bool = False) -> pd.DataFrame:
 	pbp_dfs = [
 		pd.read_csv(PBP_URL.format(season=season), error_bad_lines=False)
 		for season in seasons
@@ -17,4 +17,9 @@ def load_pbp(seasons: list, serialize: bool = True) -> pd.DataFrame:
 	]
 
 	df = pd.concat(pbp_dfs).reset_index(drop=True, inplace=True)
+
+	if only_regular_season:
+		df = df.loc[df.season_type == 'REG']
 	return df
+
+
