@@ -2,6 +2,8 @@
 # all the nflfastR calculation functions go here
 import pandas as pd
 
+# TODO: use the nflfastR rda model objects for now. maybe we want to build our own models?
+
 
 def ep(pbp: pd.DataFrame) -> pd.DataFrame:
 	pass

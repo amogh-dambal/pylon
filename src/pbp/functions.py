@@ -18,7 +18,7 @@ def load_pbp(
 		if 1999 <= int(season) <= 2020
 	]
 
-	df = pd.concat(pbp_dfs).reset_index(drop=True, inplace=True)
+	df = pd.concat(pbp_dfs).reset_index(drop=True).copy(deep=True)
 
 	# cleaning code adapted directly from Deryck97's nflfastR python guide.
 	# https://gist.github.com/Deryck97/dff8d33e9f841568201a2a0d5519ac5e
@@ -39,6 +39,6 @@ def load_pbp(
 	df.play_type.loc[df.rush == 1] = 'run'
 
 	# just for good measure
-	df.reset_index(drop=True, inplace=True)
+	df.reset_index(drop=True)
 
 	return df

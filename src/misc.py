@@ -19,7 +19,11 @@ def get_roster(seasons: list) -> pd.DataFrame:
 		for season in seasons
 		if 1999 <= int(season) <= 2020
 	]
-	df = pd.concat(roster_dfs).reset_index(drop=True, inplace=True)
+
+	for roster in roster_dfs:
+		print(roster)
+
+	df = pd.concat(roster_dfs).reset_index(drop=True)
 	return df
 
 
@@ -32,7 +36,7 @@ def get_schedules(seasons: list, filepath: str = '../data/schedules/sched_{seaso
 		if 1999 <= int(season) <= 2020
 	]
 
-	df = pd.concat(schedule_dfs).reset_index(drop=True, inplace=True)
+	df = pd.concat(schedule_dfs).reset_index(drop=True)
 	return df
 
 
