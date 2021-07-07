@@ -4,4 +4,4 @@ python:
 install:
     - pip install -r config/requirements.txt
 script:
-    - python -m unittest /Users/amogh/dev/python/pylon/test/stub.py
+    - python -m unittest test.stub
