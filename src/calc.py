@@ -3,6 +3,7 @@
 import pandas as pd
 
 # TODO: use the nflfastR rda model objects for now. maybe we want to build our own models?
+# 		for now, put the rda files in data/models/ and read from there.
 
 
 def ep(pbp: pd.DataFrame) -> pd.DataFrame:
