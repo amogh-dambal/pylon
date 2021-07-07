@@ -21,16 +21,15 @@ EXPECTED_COLUMNS = [
 	'high_school',
 	'gsis_id',
 	'espn_id',
-	'sportradar_id',
 	'yahoo_id',
 	'rotowire_id',
 	'pff_id',
 	'headshot_url',
 	'fantasy_data_id',
 	'sleeper_id',
-	'years_exp'
+	'years_exp',
+	'sportradar_id'
 ]
-
 
 class RosterTester(unittest.TestCase):
 	def test_one_year(self):
