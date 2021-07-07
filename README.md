@@ -1,2 +1,2 @@
 # pylon
-Python 3.8 version of nflfastr
+Python 3.6 version of nflfastr
