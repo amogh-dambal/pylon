@@ -31,6 +31,7 @@ EXPECTED_COLUMNS = [
 	'sportradar_id'
 ]
 
+
 class RosterTester(unittest.TestCase):
 	def test_one_year(self):
 		df = get_roster([1999])

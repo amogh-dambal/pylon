@@ -13,7 +13,6 @@ pyparsing
 pyreadr
 python-dateutil
 pytz
-rpy2
 scipy
 seaborn
 setuptools
