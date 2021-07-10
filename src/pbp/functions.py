@@ -6,7 +6,7 @@ from ..util.urls import PBP_URL
 
 
 def build_nflfastr_pbp(game_ids: list, decode: bool = True, rules: bool = True) -> pd.DataFrame:
-	pass
+	raise NotImplementedError("This function is not supported by this version of pylon.")
 
 
 def load_pbp(
