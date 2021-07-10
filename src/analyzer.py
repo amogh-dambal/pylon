@@ -3,20 +3,6 @@
 import pandas as pd
 from copy import deepcopy
 
-
-def filter(pbp: pd.DataFrame, **kwargs: dict) -> pd.DataFrame:
-	"""
-	function to filter a dataframe around certain commonly used parameters
-	for analysis.
-	:param pbp: play-by-play dataset
-	:param kwargs: keyword args representing the parameters currently supported by filtering
-	- down: either 1, 2, 3, or 4
-	- play_type: pass, rush, or no_play
-	:return: filtered pandas DataFrame object
-	"""
-	pass
-
-
 def find_game(pbp: pd.DataFrame, **kwargs: dict) -> pd.DataFrame:
 	"""
 	function wrapper around finding a specific game in a season-wide play-by-play
