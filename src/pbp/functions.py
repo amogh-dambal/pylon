@@ -13,7 +13,7 @@ def load_pbp(
 		seasons: list, only_regular_season: bool = False, remove_plays=True
 ) -> pd.DataFrame:
 	pbp_dfs = [
-		pd.read_csv(PBP_URL.format(season=season), error_bad_lines=False)
+		pd.read_csv(PBP_URL.format(season=season), compression='gzip', error_bad_lines=False)
 		for season in seasons
 		if 1999 <= int(season) <= 2020
 	]
@@ -23,14 +23,14 @@ def load_pbp(
 	# cleaning code adapted directly from Deryck97's nflfastR python guide.
 	# https://gist.github.com/Deryck97/dff8d33e9f841568201a2a0d5519ac5e
 	if only_regular_season:
-		df = df.loc[df.season_type == 'REG']
+		df = df.loc[df.season_type == 'REG'].copy()
 
 	# we want to remove plays like kickoffs, field goals, kneel downs, etc.
 	# since they usually don't have any effect on the analysis
 	if remove_plays:
 		df = df.loc[
-			(df.play_type.isin(['no_play', 'pass', 'run']) & (not df.epa.isna()))
-		]
+			(df.play_type.isin(['no_play', 'pass', 'run']) & (~df.epa.isna()))
+		].copy()
 
 	# change play type to match play call. for example,
 	# sometimes QB scrambles get mistakenly labled as run
@@ -38,7 +38,7 @@ def load_pbp(
 	df.play_type.loc[df['pass'] == 1] = 'pass'
 	df.play_type.loc[df.rush == 1] = 'run'
 
-	# just for good measure
+	# just for good measure.
 	df.reset_index(drop=True)
 
 	return df
