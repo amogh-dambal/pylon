@@ -13,7 +13,12 @@ def load_pbp(
 		seasons: list, only_regular_season: bool = False, remove_plays=True
 ) -> pd.DataFrame:
 	pbp_dfs = [
-		pd.read_csv(PBP_URL.format(season=season), compression='gzip', error_bad_lines=False)
+		pd.read_csv(
+			PBP_URL.format(season=season),
+			compression='gzip',
+			error_bad_lines=False,
+			low_memory=False  # this disables a warning that pandas gives for some reason. warning isn't important.
+		)
 		for season in seasons
 		if 1999 <= int(season) <= 2020
 	]
