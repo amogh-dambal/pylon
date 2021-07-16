@@ -4,4 +4,4 @@ python:
 install:
     - pip install -r config/requirements.txt
 script:
-    - python -m unittest test.stub
+    - python -m unittest discover -s test -p *.py

@@ -44,5 +44,6 @@ class RosterTester(unittest.TestCase):
 		self.assertTrue(np.all(df.columns == EXPECTED_COLUMNS))
 		self.assertEqual(df.shape[1], 24)
 
+
 if __name__ == '__main__':
 	unittest.main()

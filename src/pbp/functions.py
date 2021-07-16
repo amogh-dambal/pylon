@@ -38,7 +38,7 @@ def load_pbp(
 		].copy()
 
 	# change play type to match play call. for example,
-	# sometimes QB scrambles get mistakenly labled as run
+	# sometimes QB scrambles get mistakenly labeled as run
 	# plays but we want to analyze them as pass plays
 	df.play_type.loc[df['pass'] == 1] = 'pass'
 	df.play_type.loc[df.rush == 1] = 'run'
