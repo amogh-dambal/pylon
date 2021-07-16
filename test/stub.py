@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 
-from src.main import test_stub
-from src.misc import get_roster
+from src.pylon.main import test_stub
+from src.pylon.misc import get_roster
 
 EXPECTED_COLUMNS = [
 	'season',

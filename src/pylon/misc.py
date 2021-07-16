@@ -3,7 +3,7 @@
 import pandas as pd
 import pyreadr
 
-from src.util.urls import ROSTER_URL, STATS_URL
+from src.pylon.util.urls import ROSTER_URL, STATS_URL
 
 
 # TODO: look into the Sleeper API to get roster data. For now,
