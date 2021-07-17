@@ -61,8 +61,18 @@ def get_performance(pbp: pd.DataFrame, pos: str, **kwargs) -> pd.DataFrame:
 	if 'agg' in kwargs:
 		ops = deepcopy(kwargs['agg'])
 
+	category_map = {
+		"QB": "passer",
+		"RB": "rusher",
+		"WR": "receiver",  # verify that these are accurate
+		"TE": "receiver"
+	}
+	if pos not in category_map:
+		raise ValueError(f"Cannot get performance for the position {pos}.")
+	player_type = category_map[pos]
+
 	players = pbp.groupby(
-		[pos, 'posteam'],
+		[player_type, 'posteam'],
 		as_index=False
 	).agg(ops)
 
@@ -72,7 +82,13 @@ def get_performance(pbp: pd.DataFrame, pos: str, **kwargs) -> pd.DataFrame:
 	if 'min_plays' in kwargs:
 		mp = kwargs['min_plays']
 	else:
-		mp = 200
+		if player_type == 'passer':
+			mp = 200
+		elif player_type == 'rusher':
+			mp = 100
+		else:
+			mp = 30
+
 	players = players.loc[players.play_id >= mp]
 
 	# have to configure the sorting options so its invalid to specify sort properties
