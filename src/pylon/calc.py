@@ -3,7 +3,7 @@
 import pandas as pd
 import pyreadr
 
-from src.util.urls import STATS_URL
+from src.pylon.util.urls import STATS_URL
 
 # TODO: use the nflfastR rda model objects for now. maybe we want to build our own models?
 # 		for now, put the rda files in data/models/ and read from there.
