@@ -88,7 +88,6 @@ def get_performance(pbp: pd.DataFrame, pos: str, **kwargs) -> pd.DataFrame:
 			mp = 100
 		else:
 			mp = 30
-
 	players = players.loc[players.play_id >= mp]
 
 	# have to configure the sorting options so its invalid to specify sort properties
