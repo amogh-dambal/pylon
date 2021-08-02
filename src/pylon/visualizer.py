@@ -1,9 +1,11 @@
 # python 3.6
 # basic data viz
+import os
+
 import numpy as np
 import pandas as pd
-import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 # credits to Deryck97's python guide
 TEAM_COLORS = {
@@ -15,6 +17,27 @@ TEAM_COLORS = {
 	'PHI': '#014A53', 'PIT': '#FFC20E', 'SEA': '#7AC142', 'SF': '#C9243F', 'TB': '#D40909',
 	'TEN': '#4095D1', 'WAS': '#FFC20F'
 }
+
+
+def get_logos() -> list:
+	filepath = "../../data/logos"
+	logos = os.listdir(filepath)
+	return [
+		filepath + str(item)
+		for item in logos
+	]
+
+
+def get_image(path: str) -> OffsetImage:
+	"""
+	function to put images onto a plot.
+	:param path: string path to the image
+	:return: OffsetImage object
+	"""
+	# Full credits to
+	# 	https://github.com/jezlax/sports_analytics/blob/9e327b2c5e078f84469c5cf8d41fb6e352cad38e/animated_nfl_scatter.py#L141
+	# 	and Deryck97's nflfastR python guide for this code.
+	return OffsetImage(plt.imread(path), zoom=0.5)
 
 
 def build_histogram(vars: list, **kwargs) -> (plt.Figure, plt.Axes):
@@ -97,6 +120,35 @@ def build_logoplot(x: pd.Series, y: pd.Series, **kwargs) -> (plt.Figure, plt.Axe
 		'title': 'Title' if 'title' not in kwargs else str(kwargs['title']),
 		'save_as': None if 'save_as' not in kwargs else str(kwargs['save_as'])
 	}
+
+	fig, ax = plt.subplots(figsize=opts['figsize'])
+
+	ax.scatter(x, y, s=0.001)
+
+	# add logos
+	logo_paths = get_logos()
+	for _x, _y, path in zip(x, y, logo_paths):
+		ab = AnnotationBbox(
+			get_image(path),
+			(_x, _y),
+			frameon=False,
+			fontsize=5
+		)
+		ax.add_artist(ab)
+
+	# add grid
+	ax.grid(zorder=0, alpha=0.4)
+	ax.set_axisbelow(True)
+
+	# add labels and text
+	ax.set_xlabel(opts['x_label'], fontsize=16)
+	ax.set_ylabel(opts['y_label'], fontsize=16)
+	ax.set_title(opts['title'], fontsize=22)
+	plt.figtext(0.81, 0.07, 'Data: nflfastR', fontsize=12)
+
+	if opts['save_as'] is not None:
+		plt.savefig(opts['save_as'], dpi=400)
+
 	return fig, ax
 
 
