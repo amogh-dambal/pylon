@@ -40,19 +40,44 @@ def get_image(path: str) -> OffsetImage:
 	return OffsetImage(plt.imread(path), zoom=0.5)
 
 
-def build_histogram(vars: list, **kwargs) -> (plt.Figure, plt.Axes):
+def build_histogram(x: pd.Series, **kwargs) -> (plt.Figure, plt.Axes):
 	"""
 	function to build a histogram for the distribution of a set of variable
-	:param vars: variable whose distribution we're plotting
+	:param x: variable whose distribution we're plotting
 	:param kwargs: parameters to pass to build the graph.
 	:return:
 	"""
+	if x.size <= 0:
+		raise ValueError("Invalid arguments passed to function (build-histogram): size of input series is 0.")
+
+	opts = {
+		'figsize': (15, 15) if 'figsize' not in kwargs else kwargs['figsize'],
+		'best_fit': False if 'best_fit' not in kwargs else kwargs['best_fit'],
+		'x_label': 'X' if 'x_label' not in kwargs else str(kwargs['x_label']),
+		'y_label': 'y' if 'y_label' not in kwargs else str(kwargs['y_label']),
+		'title': 'Title' if 'title' not in kwargs else str(kwargs['title']),
+		'save_as': None if 'save_as' not in kwargs else str(kwargs['save_as'])
+	}
+
+	fig, ax = plt.subplots(figsize=opts['figsize'])
+	ax.hist(x, bins='auto')  # returns np.ndarray: n, bins, patches
+
+	if opts['best_fit']:
+		# TODO: figure out how to plot a best fit line for a histogram
+		pass
+
+	ax.set_xlabel(str(opts['x_label']), fontsize=12)
+	ax.set_ylabel(str(opts['y_label']), fontsize=12)
+	ax.set_title(str(opts['title']), fontsize=15)
+	plt.figtext(x=0.79, y=0.05, s='Data: nflfastR.', fontsize=10)
+
+	return fig, ax
 
 
 # basic way to build scatterplot
 def build_scatterplot(x: pd.Series, y: pd.Series, **kwargs) -> (plt.Figure, plt.Axes):
 	"""
-	function to build a scatterplot for x and y.
+	function to build a scatter plot for x and y.
 	code entirely adapted from Deryck97's amazing tutorial on nflfastR
 	for python
 	:param x:
@@ -152,15 +177,13 @@ def build_logoplot(x: pd.Series, y: pd.Series, **kwargs) -> (plt.Figure, plt.Axe
 	return fig, ax
 
 
-def build_hbar(x: pd.Series, y: pd.Series, **kwargs) -> None:
+def build_hbar(x: pd.Series, **kwargs) -> None:
 	"""
-
 	:param x:
 	:param y:
 	:return:
 	"""
-	# validate input series
-	if x.size <= 0 or y.size <= 0:
+	if x.size <= 0:
 		raise ValueError("Invalid arguments passed to function (build-scatterplot): size of input series is 0.")
 
 	opts = {
@@ -174,5 +197,63 @@ def build_hbar(x: pd.Series, y: pd.Series, **kwargs) -> None:
 	raise NotImplementedError("This function is not supported by this version of pylon. ")
 
 
-def build_vbar(x: pd.Series, y: pd.Series) -> None:
-	raise NotImplementedError("This function is not supported by this version of pylon. ")
+def build_vbar(x: pd.Series, **kwargs) -> (plt.Figure, plt.Axes):
+	"""
+
+	:param x: input data
+	:param kwargs:
+	:return:
+	"""
+	# validate input series
+	if x.size <= 0:
+		raise ValueError("Invalid arguments passed to function (build-vbar): size of input series is 0.")
+
+	opts = {
+		'figsize': (30, 10) if 'figsize' not in kwargs else kwargs['figsize'],
+		'avg_line': True if 'avg_line' not in kwargs else kwargs['avg_line'],
+		'avg_text': 'NFL Average' if 'avg_text' not in kwargs else kwargs['avg_text'],
+		'logos': True if 'logos' not in kwargs else kwargs['logos'],
+		'x_label': 'X' if 'x_label' not in kwargs else str(kwargs['x_label']),
+		'y_label': 'y' if 'y_label' not in kwargs else str(kwargs['y_label']),
+		'title': 'Title' if 'title' not in kwargs else str(kwargs['title']),
+		'save_as': None if 'save_as' not in kwargs else str(kwargs['save_as'])
+	}
+
+	fig, ax = plt.subplots(figsize=opts['figsize'])
+
+	if opts['avg_line']:
+		ax.axhline(y=x.mean(), linestyle='--', color='black')
+
+	if opts['logos']:
+		logo_paths = get_logos()
+		for _x, _y, path in zip(np.arange(x.size), x.mean() + 0.005, logo_paths):
+			ab = AnnotationBbox(
+				get_image(path),
+				(_x, _y),
+				frameon=False,
+				fontsize=5
+			)
+			ax.add_artist(ab)
+
+	ax.bar(np.arange(x.size), x, color=TEAM_COLORS.values(), width=0.6)
+
+	# add grid across the y-axis
+	ax.grid(zorder=0, alpha=0.07, axis='y')
+	ax.set_axisbelow(True)
+	ax.set_xticks(np.arange(x.size))
+
+	# add labels
+	ax.set_xlabel(opts['x_label'], fontsize=16)
+	ax.set_ylabel(opts['y_label'], fontsize=16)
+	ax.set_title(opts['title'], fontsize=22)
+	plt.figtext(0.81, 0.07, 'Data: nflfastR', fontsize=12)
+
+	if opts['avg_text']:
+		if not opts['avg_line']:
+			raise ValueError("Invalid arguments to function (build-vbar). Cannot specify avg_text if avg_line is False.")
+		plt.text(x.size - 1, x.mean() + 0.005, opts['avg_text'], fontsize=12)
+
+	if opts['save_as'] is not None:
+		plt.savefig(opts['save_as'], dpi=400)
+
+	return fig, ax
