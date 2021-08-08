@@ -22,5 +22,6 @@ def wp(pbp: pd.DataFrame) -> pd.DataFrame:
 
 
 def player_stats(pbp: pd.DataFrame, weekly: bool = False) -> pd.DataFrame:
-	df = pd.read_csv(STATS_URL, compression='gzip', low_memory=True)
-	return df
+	raise NotImplementedError("This function is not currently supported by this version of pylon.")
+	# df = pd.read_csv(STATS_URL, compression='gzip', low_memory=True)
+	# return df

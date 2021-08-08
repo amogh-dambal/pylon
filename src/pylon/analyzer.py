@@ -55,7 +55,6 @@ def get_performance(pbp: pd.DataFrame, pos: str, **kwargs) -> pd.DataFrame:
 	# TODO: write a subroutine to validate kwargs
 	ops = {
 		'epa': 'mean',
-		'cpoe': 'mean',
 		'play_id': 'count'
 	}
 	if 'agg' in kwargs:
@@ -70,6 +69,9 @@ def get_performance(pbp: pd.DataFrame, pos: str, **kwargs) -> pd.DataFrame:
 	if pos not in category_map:
 		raise ValueError(f"Cannot get performance for the position {pos}.")
 	player_type = category_map[pos]
+
+	if player_type == 'passer':
+		ops['cpoe'] = 'mean'
 
 	players = pbp.groupby(
 		[player_type, 'posteam'],
@@ -88,7 +90,7 @@ def get_performance(pbp: pd.DataFrame, pos: str, **kwargs) -> pd.DataFrame:
 			mp = 100
 		else:
 			mp = 30
-	players = players.loc[players.play_id >= mp]
+	players = players.copy().loc[players.play_id >= mp]
 
 	# have to configure the sorting options so its invalid to specify sort properties
 	# without first specifying that they want to sort.

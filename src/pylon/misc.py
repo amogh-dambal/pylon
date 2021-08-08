@@ -28,6 +28,14 @@ def get_roster(seasons: list) -> pd.DataFrame:
 
 
 def get_schedules(seasons: list, filepath: str = '../data/schedules/sched_{season}.rds') -> pd.DataFrame:
+	"""
+	Function that obtains a dataframe containing the scheduling data for the specified seasons by scraping a local
+	object file
+	:param seasons: the list of seasons to scrape for schedule data
+	:param filepath: the location of the object file containing the schedule data on disk. Not recommended to
+	change the default
+	:return: dataframe containing schedule data.
+	"""
 	# https://stackoverflow.com/questions/64178038/how-to-read-a-rds-file-from-a-url-in-python
 	# credit to ofajardo for developing the pyreadr package
 	schedule_dfs = [

@@ -1,7 +1,7 @@
 # python 3.6
 # basic data viz
+# TODO: refactor some of the redundant code into subroutines
 import os
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ TEAM_COLORS = {
 }
 
 
-def get_logos() -> list:
+def __get_logos() -> list:
 	filepath = "../../data/logos"
 	logos = os.listdir(filepath)
 	return [
@@ -28,7 +28,7 @@ def get_logos() -> list:
 	]
 
 
-def get_image(path: str) -> OffsetImage:
+def __get_image(path: str) -> OffsetImage:
 	"""
 	function to put images onto a plot.
 	:param path: string path to the image
@@ -42,10 +42,19 @@ def get_image(path: str) -> OffsetImage:
 
 def build_histogram(x: pd.Series, **kwargs) -> (plt.Figure, plt.Axes):
 	"""
-	function to build a histogram for the distribution of a set of variable
-	:param x: variable whose distribution we're plotting
+	function to build a histogram for the distribution of a variable X
+	:param x: variable whose distribution will be plotted
 	:param kwargs: parameters to pass to build the graph.
-	:return:
+	Args:
+		figsize (tuple(int, int)): specify the size of the plot. defaults to (15, 15)
+		best_fit (bool): if True, will plot a best-fit curve on the histogram. Defaults to False
+		x_label (str): the title written to the x-axis. Defaults to 'X'
+		y_label (str): the title written to the y-axis. Defaults to 'y'
+		title (str): the title of the graph or plot. Defaults to 'title'
+		save_as (str): the filename to which the function will attempt to save the generated plot. If None (default),
+		no save will occur
+	:return: tuple of (plt.Figure, plt.Axes) objects. This allows for additional customization to the plot and provides
+	flexibility in the library
 	"""
 	if x.size <= 0:
 		raise ValueError("Invalid arguments passed to function (build-histogram): size of input series is 0.")
@@ -77,13 +86,23 @@ def build_histogram(x: pd.Series, **kwargs) -> (plt.Figure, plt.Axes):
 # basic way to build scatterplot
 def build_scatterplot(x: pd.Series, y: pd.Series, **kwargs) -> (plt.Figure, plt.Axes):
 	"""
-	function to build a scatter plot for x and y.
+	function to build a scatter plot for the varibles x and y.
 	code entirely adapted from Deryck97's amazing tutorial on nflfastR
 	for python
-	:param x:
-	:param y:
-	:param kwargs:
-	:return:
+	:param x: variable that will be plotted on the X-axis
+	:param y: variable that will be plotted on the y-axis
+	:param kwargs: keyword arguments
+	Args:
+		figsize (tuple(int, int)): specify the size of the plot. defaults to (15, 15)
+		best_fit (bool): if True, will plot a best-fit curve on the histogram. Defaults to False
+		gridlines (bool): if True, will add a grid to the plot. Defaults to True.
+		x_label (str): the title written to the x-axis. Defaults to 'X'
+		y_label (str): the title written to the y-axis. Defaults to 'y'
+		title (str): the title of the graph or plot. Defaults to 'title'
+		save_as (str): the filename to which the function will attempt to save the generated plot. If None (default),
+		no save will occur
+	:return: tuple of (plt.Figure, plt.Axes) objects. This allows for additional customization to the plot and provides
+	flexibility in the library
 	"""
 	# validate input series
 	if x.size <= 0 or y.size <= 0:
@@ -126,11 +145,22 @@ def build_scatterplot(x: pd.Series, y: pd.Series, **kwargs) -> (plt.Figure, plt.
 
 def build_logoplot(x: pd.Series, y: pd.Series, **kwargs) -> (plt.Figure, plt.Axes):
 	"""
-	Function that builds a scatterplot using team logos instead of the
-	:param x: x-axis data
-	:param y: y-axis data
-	:param kwargs:
-	:return: pyplot.Figure and pylo
+	Function that builds a scatterplot using team logos instead of the default markers used
+	by matplotlib
+	:param x: variable that will be plotted on the X-axis
+	:param y: variable that will be plotted on the y-axis
+	:param kwargs: keyword arguments
+	Args:
+		figsize (tuple(int, int)): specify the size of the plot. defaults to (15, 15)
+		best_fit (bool): if True, will plot a best-fit curve on the histogram. Defaults to False
+		gridlines (bool): if True, will add a grid to the plot. Defaults to True.
+		x_label (str): the title written to the x-axis. Defaults to 'X'
+		y_label (str): the title written to the y-axis. Defaults to 'y'
+		title (str): the title of the graph or plot. Defaults to 'title'
+		save_as (str): the filename to which the function will attempt to save the generated plot. If None (default),
+		no save will occur
+	:return: tuple of (plt.Figure, plt.Axes) objects. This allows for additional customization to the plot and provides
+	flexibility in the library
 	"""
 	# validate input series
 	if x.size <= 0 or y.size <= 0:
@@ -151,10 +181,10 @@ def build_logoplot(x: pd.Series, y: pd.Series, **kwargs) -> (plt.Figure, plt.Axe
 	ax.scatter(x, y, s=0.001)
 
 	# add logos
-	logo_paths = get_logos()
+	logo_paths = __get_logos()
 	for _x, _y, path in zip(x, y, logo_paths):
 		ab = AnnotationBbox(
-			get_image(path),
+			__get_image(path),
 			(_x, _y),
 			frameon=False,
 			fontsize=5
@@ -199,10 +229,23 @@ def build_hbar(x: pd.Series, **kwargs) -> None:
 
 def build_vbar(x: pd.Series, **kwargs) -> (plt.Figure, plt.Axes):
 	"""
-
-	:param x: input data
-	:param kwargs:
-	:return:
+	Plots a vertical bar chart for a set of data points.
+	:param x: set of input datapoints
+	:param kwargs: keyword arguments
+	Args:
+		figsize (tuple(int, int)): specify the size of the plot. defaults to (15, 15)
+		avg_line (bool): if True, will add a line demarcating the level of the average value of x
+		avg_text (str): The label given to the average line, if one exists. Defaults to 'NFL average'. Must have
+		avg_line = True for this to be active, otherwise function throws exception
+		logos (bool): if True, adds logos to the top of the bars (good if each data point represents a team).
+			Defaults to True.
+		x_label (str): the title written to the x-axis. Defaults to 'X'
+		y_label (str): the title written to the y-axis. Defaults to 'y'
+		title (str): the title of the graph or plot. Defaults to 'title'
+		save_as (str): the filename to which the function will attempt to save the generated plot. If None (default),
+			no save will occur
+	:return: tuple of (plt.Figure, plt.Axes) objects. This allows for additional customization to the plot and provides
+	flexibility in the library
 	"""
 	# validate input series
 	if x.size <= 0:
@@ -225,10 +268,10 @@ def build_vbar(x: pd.Series, **kwargs) -> (plt.Figure, plt.Axes):
 		ax.axhline(y=x.mean(), linestyle='--', color='black')
 
 	if opts['logos']:
-		logo_paths = get_logos()
+		logo_paths = __get_logos()
 		for _x, _y, path in zip(np.arange(x.size), x.mean() + 0.005, logo_paths):
 			ab = AnnotationBbox(
-				get_image(path),
+				__get_image(path),
 				(_x, _y),
 				frameon=False,
 				fontsize=5
